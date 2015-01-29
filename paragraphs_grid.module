@@ -1,0 +1,47 @@
+<?php
+
+function paragraphs_grid_theme($existing, $type, $theme, $path) {
+  return array(
+    'paragraphs_grid_content' => array(
+      'render element' => 'element',
+      'function' => 'paragraphs_grid_theme_paragraphs_grid_content',
+    ),
+  );
+}
+
+function paragraphs_grid_theme_paragraphs_grid_content($element) {
+  $render = '';
+  $render .= '<div class="wrapper">';
+  $columns = 0;
+  foreach ($element['items'] as $child) {
+    $item = reset($child['entity']['paragraphs_item']);
+    $column_width = $item['#entity']->field_paragraph_grid_columns[LANGUAGE_NONE][0]['value'];
+    $columns += (int) $column_width;
+    if ($columns > 12) {
+      $columns = $column_width;
+      $render .= '</div><div class="wrapper">';
+    }
+    $render .= '<div class="column-width-' . $column_width . '">';
+    $render .= drupal_render($child);
+    $render .= '</div>';
+  }
+  $render .= '</div>';
+  return $render;
+}
+
+function paragraphs_grid_preprocess_field(&$vars) {
+  if ($vars['element']['#field_name'] === 'field_content') {
+    $vars['theme_hook_suggestions'][] = 'paragraphs_grid_content';
+    dpm($vars, 'vars');
+  }
+}
+
+function paragraphs_grid_preprocess(&$vars, $hook) {
+  if (isset($vars['elements']['#entity_type']) === TRUE) {
+    if ($vars['elements']['#entity_type'] === 'paragraphs_item') {
+      if (empty($vars['field_paragraph_grid_columns']) === FALSE) {
+        $vars['classes_array'][] = 'column-' . $vars['field_paragraph_grid_columns'][0]['value'];
+      }
+    }
+  }
+}
