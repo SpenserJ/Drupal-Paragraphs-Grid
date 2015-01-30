@@ -30,9 +30,23 @@ function paragraphs_grid_theme_paragraphs_grid_content($element) {
 }
 
 function paragraphs_grid_preprocess_field(&$vars) {
-  if ($vars['element']['#field_name'] === 'field_content') {
-    $vars['theme_hook_suggestions'][] = 'paragraphs_grid_content';
-    dpm($vars, 'vars');
+  if ($vars['element']['#field_type'] === 'paragraphs') {
+    $has_columns = FALSE;
+
+    foreach ($vars['items'] as $i => $paragraph) {
+      $paragraph = array_shift($paragraph['entity']['paragraphs_item']);
+
+      // If there are columns in this paragraph item, render the whole
+      // paragraphs element as a grid.
+      if (empty($paragraph['field_paragraph_grid_columns']) === FALSE) {
+        $has_columns = TRUE;
+        break;
+      }
+    }
+
+    if ($has_columns === TRUE) {
+      $vars['theme_hook_suggestions'][] = 'paragraphs_grid_content';
+    }
   }
 }
 
