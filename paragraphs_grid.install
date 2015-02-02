@@ -12,3 +12,7 @@ function paragraphs_grid_install() {
     field_create_field($field);
   }
 }
+
+function paragraphs_grid_uninstall() {
+  field_delete_field('paragraphs_grid_column_width');
+}
