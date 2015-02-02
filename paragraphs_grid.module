@@ -65,7 +65,40 @@ function paragraphs_grid_preprocess(&$vars, $hook) {
  * @param $bundles an array of paragraph bundle names that require column field
  */
 function paragraphs_grid_configure_bundles($bundles) {
+  // get bundles already using the field
+  $current_field = field_info_field('paragraphs_grid_column_width');
+  $old_bundles = isset($current_field['bundles']['paragraphs_item']) ? $current_field['bundles']['paragraphs_item'] : array();
+
+  // remove old instances
+  foreach($old_bundles as $bundle) {
+    // anything in the old and not the new is removed
+    if(in_array($bundle, $bundles) === FALSE) {
+      // get the old instance
+      $instance = field_info_instance('paragraphs_item', 'paragraphs_grid_column_width', $bundle);
+      // second argument FALSE so field doesnt get removed from system
+      field_delete_instance($instance, FALSE);
+    }
+  }
+
+  // add new instances
   foreach($bundles as $bundle) {
-    
+    // anything in the new bundles not in the old was added
+    if(in_array($bundle, $old_bundles) === FALSE) {
+      $instance = array(
+        'field_name' => 'paragraphs_grid_column_width',
+        'entity_type' => 'paragraphs_item',
+        'bundle' => $bundle,
+        'label' => t('Column Width'),
+        'required' => TRUE,
+        'settings' => array(
+          'min' => '1',
+          'max' => '12',
+        ),
+        'default_value' => array(
+          array('value' => '6'),
+        ),
+      );
+      field_create_instance($instance);
+    }
   }
 }
