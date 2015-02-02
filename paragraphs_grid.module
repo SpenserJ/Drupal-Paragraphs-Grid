@@ -59,3 +59,13 @@ function paragraphs_grid_preprocess(&$vars, $hook) {
     }
   }
 }
+
+/**
+ * Update relevant paragraphs bundles to use the grid field
+ * @param $bundles an array of paragraph bundle names that require column field
+ */
+function paragraphs_grid_configure_bundles($bundles) {
+  foreach($bundles as $bundle) {
+    
+  }
+}

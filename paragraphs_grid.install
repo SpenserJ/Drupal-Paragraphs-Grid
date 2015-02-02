@@ -1,0 +1,14 @@
+<?php
+
+function paragraphs_grid_install() {
+  // if the field hasn't been defined yet
+  if (field_info_field('paragraphs_grid_column_width') === NULL) {
+    $field = array(
+      'field_name' => 'paragraphs_grid_column_width',
+      'type' => 'number_integer',
+      'locked' => TRUE,
+    );
+    // create field only here, instances will be created by configurator
+    field_create_field($field);
+  }
+}
