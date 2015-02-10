@@ -27,7 +27,9 @@ function paragraphs_grid_theme_paragraphs_grid_content($element) {
       $columns = $column_width;
       $render .= '</div><div class="wrapper">';
     }
-    $render .= '<div class="column-width-' . $column_width . '">';
+    // add in the bundle name as a class
+    $bundle = str_replace('_', '-', $item['#bundle']);
+    $render .= '<div class="column-width-' . $column_width . ' ' . $bundle . '">';
     $render .= drupal_render($child);
     $render .= '</div>';
   }
