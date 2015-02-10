@@ -14,8 +14,14 @@ function paragraphs_grid_theme_paragraphs_grid_content($element) {
   $render .= '<div class="wrapper">';
   $columns = 0;
   foreach ($element['items'] as $child) {
-    $item = reset($child['entity']['paragraphs_item']);
+    // get the paragraphs key
+    $pid = key($child['entity']['paragraphs_item']);
+    // get the paragraphs item
+    $item = &$child['entity']['paragraphs_item'][$pid];
+    // use the column width
     $column_width = $item['#entity']->paragraphs_grid_column_width[LANGUAGE_NONE][0]['value'];
+    // remove it from the render
+    unset($item['paragraphs_grid_column_width']);
     $columns += (int) $column_width;
     if ($columns > 12) {
       $columns = $column_width;
